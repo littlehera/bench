@@ -80,7 +80,7 @@ def init(path, apps_path=None, no_procfile=False, no_backups=False,
 
 	bench.set_frappe_version(bench_path=path)
 	if bench.FRAPPE_VERSION > 5:
-		update_node_packages(bench_path=path)
+		update_node_packages(bench_path=path, frappe_branch= frappe_branch)
 
 	set_all_patches_executed(bench_path=path)
 	build_assets(bench_path=path)
@@ -437,19 +437,21 @@ def update_requirements(bench_path='.'):
 	for app in get_apps():
 		install_app(app, bench_path=bench_path)
 
-def update_node_packages(bench_path='.'):
+def update_node_packages(bench_path='.', frappe_branch = None):
 	print('Updating node packages...')
 	from bench.app import get_develop_version
 	from distutils.version import LooseVersion
-	v = LooseVersion(get_develop_version('frappe', bench_path = bench_path))
 
-
-	# After rollup was merged, frappe_version = 10.1
-	# if develop_verion is 11 and up, only then install yarn
-	if v < LooseVersion('11.x.x-develop'):
-		update_npm_packages(bench_path)
-	else:
+	if frappe_branch in ['v7.x.x','v8.x.x','v9.x.x','v10.x.x']:
 		update_yarn_packages(bench_path)
+	else:
+		v = LooseVersion(get_develop_version('frappe', bench_path = bench_path))
+		# After rollup was merged, frappe_version = 10.1
+		# if develop_verion is 11 and up, only then install yarn
+		if v < LooseVersion('11.x.x-develop'):
+			update_npm_packages(bench_path)
+		else:
+			update_yarn_packages(bench_path)
 
 def update_yarn_packages(bench_path='.'):
 	apps_dir = os.path.join(bench_path, 'apps')

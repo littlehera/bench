@@ -404,7 +404,7 @@ def switch_to_develop(apps=None, bench_path='.', upgrade=True):
 def get_version_from_string(contents, field='__version__'):
 	match = re.search(r"^(\s*%s\s*=\s*['\\\"])(.+?)(['\"])(?sm)" % field,
 			contents)
-	return match.group(2)
+	return match.group(2) if match is not None else 0
 
 def get_major_version(version):
 	return semantic_version.Version(version).major
