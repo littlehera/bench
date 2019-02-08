@@ -62,7 +62,7 @@ def init(path, apps_path=None, no_procfile=False, no_backups=False,
 
 	setup_logging()
 
-	setup_env(bench_path=path, python = python)
+	setup_env(bench_path=path, python = python, frappe_branch = frappe_branch)
 
 	make_config(path)
 
@@ -169,12 +169,15 @@ def which(executable, raise_err = False):
 
 	return exec_
 
-def setup_env(bench_path='.', python = 'python'):
+def setup_env(bench_path='.', python = 'python', frappe_branch = None):
 	python = which(python, raise_err = True)
 	pip    = os.path.join('env', 'bin', 'pip')
 
 	exec_cmd('virtualenv -q {} -p {}'.format('env', python), cwd=bench_path)
-	exec_cmd('{} -q install --upgrade pip'.format(pip), cwd=bench_path)
+	if frappe_branch in ['v7.x.x','v8.x.x','v9.x.x','v10.x.x']:
+		exec_cmd('{} -q install pip==9.0.3'.format(pip), cwd=bench_path)
+	else:
+		exec_cmd('{} -q install --upgrade pip'.format(pip), cwd=bench_path)
 	exec_cmd('{} -q install wheel'.format(pip), cwd=bench_path)
 	exec_cmd('{} -q install six'.format(pip), cwd=bench_path)
 	exec_cmd('{} -q install -e git+https://github.com/frappe/python-pdfkit.git#egg=pdfkit'.format(pip), cwd=bench_path)
