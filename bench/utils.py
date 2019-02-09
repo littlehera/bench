@@ -176,6 +176,7 @@ def setup_env(bench_path='.', python = 'python', frappe_branch = None):
 	exec_cmd('virtualenv -q {} -p {}'.format('env', python), cwd=bench_path)
 	if frappe_branch in ['v7.x.x','v8.x.x','v9.x.x','v10.x.x']:
 		exec_cmd('{} -q install pip==9.0.3'.format(pip), cwd=bench_path)
+		exec_cmd('{} -q install redis==2.10.6'.format(pip), cwd=bench_path)
 	else:
 		exec_cmd('{} -q install --upgrade pip'.format(pip), cwd=bench_path)
 	exec_cmd('{} -q install wheel'.format(pip), cwd=bench_path)
