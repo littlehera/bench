@@ -424,8 +424,11 @@ def set_default_site(site, bench_path='.'):
 def update_requirements(bench_path='.'):
 	print('Updating Python libraries...')
 	pip = os.path.join(bench_path, 'env', 'bin', 'pip')
-
-	exec_cmd("{pip} install --upgrade pip".format(pip=pip))
+	cmd_str = "{pip} --version".format(pip=pip)
+	pip_version = str(subprocess.check_output(cmd_str, shell=True))
+	#if pip version is 9.0.3 (for old versions of frappe/erpnext, DO NOT UPDATE pip
+	if pip_version.split(' ')[1] != "9.0.3":
+		exec_cmd("{pip} install --upgrade pip".format(pip=pip))
 
 	apps_dir = os.path.join(bench_path, 'apps')
 
