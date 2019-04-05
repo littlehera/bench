@@ -449,12 +449,15 @@ def update_node_packages(bench_path='.', frappe_branch = None):
 	if frappe_branch in ['v7.x.x','v8.x.x','v9.x.x','v10.x.x']:
 		update_yarn_packages(bench_path)
 	else:
-		v = LooseVersion(get_develop_version('frappe', bench_path = bench_path))
-		# After rollup was merged, frappe_version = 10.1
-		# if develop_verion is 11 and up, only then install yarn
-		if v < LooseVersion('11.x.x-develop'):
-			update_npm_packages(bench_path)
-		else:
+		try:
+			v = LooseVersion(get_develop_version('frappe', bench_path = bench_path))
+			# After rollup was merged, frappe_version = 10.1
+			# if develop_verion is 11 and up, only then install yarn
+			if v < LooseVersion('11.x.x-develop'):
+				update_npm_packages(bench_path)
+			else:
+				update_yarn_packages(bench_path)
+		except:
 			update_yarn_packages(bench_path)
 
 def update_yarn_packages(bench_path='.'):
